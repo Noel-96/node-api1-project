@@ -8,7 +8,7 @@ const server = express()
 server.use(express.json())
 
 
-server.post("/api/users", (req, res) => {
+server.post("/api/users",  async (req, res) => {
 
     // const newUser = {
     //     name: req.body.name,
@@ -16,7 +16,7 @@ server.post("/api/users", (req, res) => {
     // }
 
 	if (req.body.name || req.body.bio ) {
-		const newUser = db.insert({
+		const newUser = await db.insert({
             name: req.body.name,
             bio: req.body.bio
         })
@@ -33,8 +33,8 @@ server.post("/api/users", (req, res) => {
 })
 
 
-server.get("/api/users", (req, res) => {
-    const users = db.find()
+server.get("/api/users", async (req, res) => {
+    const users =  await db.find()
     if (users) {
         res.json(users)
     } else {
@@ -45,8 +45,8 @@ server.get("/api/users", (req, res) => {
 })
 
 
-server.get("/api/users/:id", (req, res) => {
-	const user = db.findById(req.params.id)
+server.get("/api/users/:id", async (req, res) => {
+	const user =  await db.findById(req.params.id)
 
 	if (user) {
 		res.json(user)
@@ -61,8 +61,8 @@ server.get("/api/users/:id", (req, res) => {
     }
 })
 
-server.delete("api/users/:id", (req, res) => {
-	const user = db.findById(req.params.id)
+server.delete("api/users/:id",  async (req, res) => {
+	const user = await db.findById(req.params.id)
 
 	if (user) {
 		db.remove(user.id)
@@ -75,8 +75,8 @@ server.delete("api/users/:id", (req, res) => {
 	}
 })
 
-server.put("api/uesrs/:id", (req, res) => {
-	const user = db.findById(req.params.id)
+server.put("api/uesrs/:id", async (req, res) => {
+	const user =  await db.findById(req.params.id)
 
 
 	if (user) {
@@ -92,7 +92,7 @@ server.put("api/uesrs/:id", (req, res) => {
 		res.status(404).json({
 			message: "The user with the specified ID does not exist",
 		})
-	} else if ((!user.name || !user.bio){
+	} else if ((!user.name || !user.bio)) {
 		res.status(400).json({
             message: "Please provide name and bio for the user"
         })
